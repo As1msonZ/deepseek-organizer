@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 400px;
+            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            background: #f8fafc;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0 0 4px 0;
+        }
+        .header p {
+            font-size: 12px;
+            color: #6b7280;
+            margin: 0;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        .token-counter-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .token-counter-section .section-title {
+            color: white;
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-title svg {
+            width: 16px;
+            height: 16px;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        button {
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+        button:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+        .export-btn {
+            color: #059669;
+            border-color: #10b981;
+        }
+        .export-btn:hover {
+            background: #ecfdf5;
+        }
+        .import-btn {
+            color: #d97706;
+            border-color: #f59e0b;
+        }
+        .import-btn:hover {
+            background: #fffbeb;
+        }
+        .backup-btn {
+            color: #374151;
+        }
+        .toggle-btn {
+            color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        .toggle-btn:hover {
+            background: #eff6ff;
+        }
+        .collapse-btn {
+            color: #6b7280;
+            border-color: #6b7280;
+        }
+        .collapse-btn:hover {
+            background: #f9fafb;
+        }
+        .danger-btn {
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+        .danger-btn:hover {
+            background: #fef2f2;
+        }
+        .status {
+            font-size: 11px;
+            color: #6b7280;
+            text-align: center;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+        .icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 0;
+        }
+        .toggle-label {
+            font-size: 13px;
+            color: #374151;
+            flex: 1;
+        }
+        .token-counter-section .toggle-label {
+            color: white;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .button-group button {
+            font-size: 12px;
+            padding: 8px 10px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+        .token-counter-section .stat-item {
+            background: rgba(255,255,255,0.2);
+        }
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        .token-counter-section .stat-number {
+            color: white;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        .token-counter-section .stat-label {
+            color: rgba(255,255,255,0.9);
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .token-limits {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .token-limit-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .token-limit-value {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            color: white;
+        }
+        .token-limit-label {
+            font-size: 10px;
+            opacity: 0.9;
+            color: white;
+        }
+        .threshold-setting {
+            margin: 12px 0;
+        }
+        .threshold-slider {
+            width: 100%;
+            margin: 8px 0;
+        }
+        .threshold-value {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DeepSeek Organizer</h1>
+        <p>Организация чатов и управление лимитами</p>
+    </div>
+
+    <!-- Секция счетчика токенов -->
+    <div class="token-counter-section">
+        <h3 class="section-title">
+            <svg viewBox="0 0 16 16" fill="currentColor" style="color: white;">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM5 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+            </svg>
+            Счетчик токенов DeepSeek
+        </h3>
+
+        <div class="token-limits">
+            <div class="token-limit-item">
+                <div class="token-limit-value">128K</div>
+                <div class="token-limit-label">Контекст</div>
+            </div>
+            <div class="token-limit-item">
+                <div class="token-limit-value">4K</div>
+                <div class="token-limit-label">Ответ</div>
+            </div>
+            <div class="token-limit-item">
+                <div class="token-limit-value">50 МБ</div>
+                <div class="token-limit-label">Файлы</div>
+            </div>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Включить счетчик</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-token-counter" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Авто-расчет</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-auto-calculate" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Показывать предупреждения</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-show-warnings" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Продвинутый подсчет</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-advanced-counting" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="threshold-setting">
+            <div class="toggle-label" style="margin-bottom: 8px;">Порог предупреждения:</div>
+            <input type="range" id="warning-threshold" class="threshold-slider" min="50" max="95" value="80" step="5">
+            <div class="threshold-value" id="threshold-value">80%</div>
+        </div>
+
+        <button id="reset-token-counter" class="toggle-btn" style="width: 100%; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg>
+            Сбросить счетчик
+        </button>
+    </div>
+
+    <!-- Секция отображения -->
+    <div class="section">
+        <h3 class="section-title">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM2 8a6 6 0 0 1 6-6v6h6a6 6 0 0 1-6 6V8H2z"/>
+            </svg>
+            Настройки отображения
+        </h3>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Показывать организатор</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-organizer">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Авто-сворачивание групп</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-auto-collapse">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Показывать количество</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-show-counts">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="button-group">
+            <button id="collapse-all-btn" class="collapse-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                </svg>
+                Свернуть все
+            </button>
+            <button id="expand-all-btn" class="collapse-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M1.646 4.646a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Развернуть все
+            </button>
+        </div>
+    </div>
+
+    <!-- Секция управления группами -->
+    <div class="section">
+        <h3 class="section-title">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M14 2a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h12zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
+                <path d="M3 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4zM3 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9z"/>
+            </svg>
+            Управление группами
+        </h3>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="groups-count">0</div>
+                <div class="stat-label">Групп</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="chats-count">0</div>
+                <div class="stat-label">Чатов</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button id="create-group-btn" class="toggle-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                </svg>
+                Новая группа
+            </button>
+            <button id="cleanup-groups-btn" class="danger-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+                Очистить пустые
+            </button>
+        </div>
+    </div>
+
+    <!-- Секция данных -->
+    <div class="section">
+        <h3 class="section-title">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            Управление данными
+        </h3>
+        
+        <div class="actions">
+            <button id="export-btn" class="export-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 11.5V7H5l3-3 3 3H9v4.5h2v1H5v-1h2z"/>
+                </svg>
+                Экспорт данных
+            </button>
+            <button id="import-btn" class="import-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4.5V9H5l3 3 3-3H9V4.5H7z"/>
+                </svg>
+                Импорт данных
+            </button>
+            <button id="backup-btn" class="backup-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zM5 7h6v2H5z"/>
+                </svg>
+                Резервная копия
+            </button>
+            <button id="reset-btn" class="danger-btn">
+                <svg class="icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM5.854 5.146a.5.5 0 1 1 .708.708L6.707 7.5h3.586l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 8.5H6.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2z"/>
+                </svg>
+                Сбросить все
+            </button>
+        </div>
+    </div>
+
+    <div class="status" id="status">
+        Загрузка...
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
